@@ -1,6 +1,5 @@
 package pathFinder;
 
-
 import map.Coordinate;
 import map.PathMap;
 
@@ -21,7 +20,7 @@ public class Order implements PathFinder
 	private Coordinate goal;
 	
 	// a one-time instantiation of the least cost path through the order
-	private List<Coordinate> path;
+	private LinkedList<Coordinate> path;
 	// least path cost through its edges for ALL WAYPOINT ORDERS
 	int cost;
 	
@@ -56,7 +55,7 @@ public class Order implements PathFinder
 	// Nodes: Start S, Waypoints W1 W2 W3, Goal G
 	//
 	// 1st permutation:	Path: S W1 W2 W3 G	Waypoint order: 1,2,3
-	// 2nd permutation: Path: S W1 W2 W3 G	Waypoint order: 1,3,2
+	// 2nd permutation: Path: S W1 W3 W2 G	Waypoint order: 1,3,2
 	// .
 	// .
 	// . (no. waypoints)! permutations later 
@@ -70,6 +69,7 @@ public class Order implements PathFinder
 	// brute-force through every permutation
 	private void findThePath()
 	{
+		List<Coordinate> bestOrder = null;
 		// all possible waypoint orders
 		for (int[] waypointOrder : Math.allPermutations(map.waypointCells.size()))
 		{
@@ -79,13 +79,19 @@ public class Order implements PathFinder
 			if (minPathCost(order) < cost)
 			{
 				cost = minPathCost(order);
-				path.clear();
-				// path formed from all edge paths between each node
-				for(NodeEdge edge : toEdges(order))
-					path.addAll(edge.path);								
+				bestOrder = order;					
 			}
 		}
+		// path formed from all edge paths
+		for(NodeEdge edge : toEdges(bestOrder))
+		{
+			if (!path.isEmpty())
+				path.removeLast();
+			path.addAll(edge.path);	
+		}
+		
 	}
+	
 	
 	// start/goal/waypoints are nodes
 	// uses an ordered list of nodes to traverse
@@ -114,19 +120,12 @@ public class Order implements PathFinder
 	// ordered list of nodes to traverse to find its cost
 	private List<Coordinate> buildOrder(Coordinate start, int[] waypointOrder, Coordinate goal)
 	{
-		LinkedList<Coordinate> order = buildOrder(waypointOrder);
-		order.addFirst(start);
+		LinkedList<Coordinate> order = new LinkedList<>();
+		order.add(start);
+		for (int i=0; i<waypointOrder.length; i++)
+			order.add(map.waypointCells.get(waypointOrder[i]));
 		order.add(goal);
 		return order;
-	}
-	
-	// for reusing in constructor
-	private LinkedList<Coordinate> buildOrder(int[] waypointOrder)
-	{
-		LinkedList<Coordinate> wpOrder = new LinkedList<>();
-		for (int i=0; i<waypointOrder.length; i++)
-			wpOrder.add(map.waypointCells.get(waypointOrder[i]));
-		return wpOrder;
 	}
     
     // map alternative - get bi directional edge
@@ -135,7 +134,7 @@ public class Order implements PathFinder
     	for (NodeEdge edge : edges)
     	{
     		if (edge.getStart().equals(start)&& edge.getGoal().equals(goal))	return edge;
-    		if (edge.getStart().equals(goal) && edge.getGoal().equals(start))	return edge;
+//    		if (edge.getStart().equals(goal) && edge.getGoal().equals(start))	return edge;
     	}
     	return null;
     }

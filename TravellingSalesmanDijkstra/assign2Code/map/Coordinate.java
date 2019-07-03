@@ -3,9 +3,6 @@ package map;
 import java.util.*;
 
 /**
- * @author Jeffrey Chan, Youhan Xia, Phuc Chu
- * RMIT Algorithms & Analysis, 2019 semester 1
- * <p>
  * Class representing a coordinate.
  */
 
@@ -40,6 +37,19 @@ public class Coordinate// implements Comparable<Coordinate>
     // a connection to another coordinate
     // used to form the shortest path
     private Coordinate link;
+    
+    
+    /**
+     * Construct coordinate with string format "(r,c)"
+     * 
+     * @param str
+     */
+    public Coordinate(String str) {
+    	int c = str.indexOf(',');
+    	this.r = Integer.parseInt(str.substring(1,c));
+    	this.c = Integer.parseInt(str.substring(c+1, str.length()-1));
+    	this.isImpassable = false;
+    }
 
     /**
      * Construct coordinate (r, c).
@@ -125,8 +135,7 @@ public class Coordinate// implements Comparable<Coordinate>
     } // end of hashCode()
 
 
-    @Override
-    public String toString() {
+    public String toString1() {
         return "(" + r + "," + c + "), " + isImpassable + ", " + terrainCost;
     } // end of toString()
     
@@ -151,6 +160,21 @@ public class Coordinate// implements Comparable<Coordinate>
 //		else 											
 //			return -1;
 //	} 
+    
+    
+    
+    public boolean isAdjacent(Coordinate co) 
+    {
+    	if (this.r == co.r ^ this.c == co.c)
+    	{
+    		if (this.r + 1 == co.r || this.r - 1 == co.r)
+    			return true;
+    		if (this.c + 1 == co.c || this.c - 1 == co.c)
+    			return true;
+    	}
+    	return false;
+
+    }
     
     public Coordinate getLink()
     {
@@ -188,5 +212,9 @@ public class Coordinate// implements Comparable<Coordinate>
 		return minPathCost;
 	}
     
+	public String toString() 
+	{
+		return "(" + r + "," + c +  ")";
+	}
     
 } // end of class Coordinate

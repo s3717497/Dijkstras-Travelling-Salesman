@@ -4,11 +4,7 @@ import java.util.*;
 import map.Coordinate;
 
 /**
- * @author Jeffrey Chan, Youhan Xia, Phuc Chu
- * RMIT Algorithms & Analysis, 2019 semester 1
- * <p>
  * Class of a map (for path finding).
- * For the assignment it is used to read in information but also to visualise it.
  * It is a grid representation.
  */
 public class PathMap

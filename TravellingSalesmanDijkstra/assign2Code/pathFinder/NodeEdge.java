@@ -1,10 +1,12 @@
 package pathFinder;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import map.ConsoleDraw;
 import map.Coordinate;
 import map.PathMap;
 
@@ -85,6 +87,9 @@ public class NodeEdge implements PathFinder {
 		
 // 		// prints out one path between 2 nodes
 //		ConsoleDraw.print(map, path);
+		
+		// since chained in reverse order
+		Collections.reverse(path);
 	}
 	
 	public List<Coordinate> findPath()
@@ -111,7 +116,7 @@ public class NodeEdge implements PathFinder {
 			toVisit.removeAll(visited);
 			
 //			// prints a console animation of the search process		
-//			ConsoleDraw.printSearch(map, start, goal, visited, toVisit);
+			ConsoleDraw.printSearch(map, start, goal, visited, toVisit);
 			
 			//Once toVisit Coordinates have a path cost, ready to move on
 			//choose the Coordinate with the lowest path cost
